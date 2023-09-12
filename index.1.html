@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        #task-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        #add-task-btn {
+            padding: 10px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        #task-list {
+            list-style: none;
+            padding: 0;
+        }
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 5px;
+        }
+        .task-item.complete {
+            background-color: #b8ff61;
+        }
+        .task-item .task-text {
+            flex-grow: 1;
+        }
+        .task-item .actions {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>To-Do App</h1>
+        <input type="text" id="task-input" placeholder="Add a new task">
+        <button id="add-task-btn">Add Task</button>
+        <div>
+            <h2>Pending Tasks</h2>
+            <ul id="pending-tasks" class="task-list"></ul>
+        </div>
+        <div>
+            <h2>Completed Tasks</h2>
+            <ul id="completed-tasks" class="task-list"></ul>
+        </div>
+    </div>
+
+    <script>
+        const taskInput = document.getElementById('task-input');
+        const addTaskButton = document.getElementById('add-task-btn');
+        const pendingTasksList = document.getElementById('pending-tasks');
+        const completedTasksList = document.getElementById('completed-tasks');
+
+        addTaskButton.addEventListener('click', function () {
+            const taskText = taskInput.value.trim();
+            if (taskText !== '') {
+                const taskItem = document.createElement('li');
+                taskItem.className = 'task-item';
+                taskItem.innerHTML = `
+                    <span class="task-text">${taskText}</span>
+                    <div class="actions">
+                        <button class="complete-button">Complete</button>
+                        <button class="edit-button">Edit</button>
+                        <button class="delete-button">Delete</button>
+                    </div>
+                `;
+
+                const completeButton = taskItem.querySelector('.complete-button');
+                completeButton.addEventListener('click', function () {
+                    taskItem.classList.toggle('complete');
+                    if (taskItem.classList.contains('complete')) {
+                        completedTasksList.appendChild(taskItem);
+                        completeButton.innerText = 'Uncomplete';
+                    } else {
+                        pendingTasksList.appendChild(taskItem);
+                        completeButton.innerText = 'Complete';
+                    }
+                });
+
+                const editButton = taskItem.querySelector('.edit-button');
+                editButton.addEventListener('click', function () {
+                    const newTaskText = prompt('Edit task:', taskText);
+                    if (newTaskText !== null) {
+                        taskItem.querySelector('.task-text').textContent = newTaskText;
+                    }
+                });
+
+                const deleteButton = taskItem.querySelector('.delete-button');
+                deleteButton.addEventListener('click', function () {
+                    taskItem.remove();
+                });
+
+                pendingTasksList.appendChild(taskItem);
+                taskInput.value = '';
+            }
+        });
+    </script>
+</body>
+</html>
